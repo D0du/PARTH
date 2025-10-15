@@ -11,6 +11,7 @@ services:
     volumes:
       - ./backend:/app
       - /tmp:/tmp
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - scanner-network
     restart: unless-stopped
