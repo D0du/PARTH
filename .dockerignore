@@ -4,5 +4,6 @@ dist
 .env
 .git
 .gitignore
-README.md
-scan-results
+backend
+*.log
+.DS_Store

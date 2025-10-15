@@ -1,150 +1,86 @@
-# Vulnerability Scanner
+# Vulnerability Scanner Dashboard
 
-A security assessment and penetration testing toolkit with a modern web UI and Docker-based backend.
+A comprehensive security scanning application with support for Nmap, Nikto, and Nuclei vulnerability scanners.
 
 ## Features
 
-- **Multiple Security Tools**:
-  - OpenVAS - Network vulnerability scanning
-  - Nuclei - Fast template-based scanning
-  - Nmap - Port scanning and network discovery
-  - OWASP ZAP - Web application and API security testing
-  - SSLyze - TLS/SSL configuration analysis
-
-- **Real-time Scanning**: Live scan status updates with automatic polling
-- **Dashboard**: View scan history, findings, and statistics
-- **Docker-based Backend**: Isolated security tools running in containers
+- **Nmap Scanner**: Network mapping and port scanning
+- **Nikto Scanner**: Web server vulnerability scanning
+- **Nuclei Scanner**: Fast vulnerability scanner with templates
+- **Scan History**: View and manage all previous scans with results stored in Supabase
+- **Real-time Results**: View scan output in real-time
+- **Docker Support**: Easy deployment with Docker Compose
 
 ## Prerequisites
 
 - Docker and Docker Compose
-- Node.js 18+ (for frontend development)
+- Node.js 18+ (for local development)
+- Supabase account (database credentials in .env file)
 
-## Setup Instructions
+## Quick Start
 
-### 1. Start the Backend
+1. **Clone and setup**:
+   ```bash
+   # Ensure .env file has Supabase credentials
+   cat .env
+   ```
 
-Navigate to the project root and start all services:
+2. **Start with Docker Compose**:
+   ```bash
+   docker-compose up --build
+   ```
 
-```bash
-docker-compose up -d
-```
+3. **Access the application**:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
 
-This will start:
-- Scanner API (port 3001)
-- Nmap container
-- Nuclei container
-- OWASP ZAP (port 8080)
-- SSLyze container
+## Architecture
 
-Check if all containers are running:
+- **Frontend**: React + TypeScript + Tailwind CSS
+- **Backend**: FastAPI (Python)
+- **Database**: Supabase (PostgreSQL)
+- **Security Tools**: Nmap, Nikto, Nuclei (installed in backend container)
 
-```bash
-docker-compose ps
-```
+## API Endpoints
 
-### 2. Install Backend Dependencies
+- `POST /scan/nmap` - Run Nmap scan
+- `POST /scan/nikto` - Run Nikto scan
+- `POST /scan/nuclei` - Run Nuclei scan
+- `GET /scans` - Get all scan history
+- `GET /scans/{scan_id}` - Get specific scan details
+- `GET /health` - Health check
 
-If this is your first time running, install the backend dependencies:
+## Usage
 
-```bash
-cd backend
-npm install
-cd ..
-```
+1. Select a scanner tool from the dashboard
+2. Enter target IP address or domain
+3. Add optional scan parameters
+4. Click "Start Scan"
+5. View results in real-time
+6. Access scan history at the bottom of the dashboard
 
-### 3. Start the Frontend
+## Security Note
 
-In a new terminal, start the frontend development server:
+This tool is designed for authorized security testing only. Always ensure you have permission to scan target systems.
 
+## Development
+
+**Frontend development**:
 ```bash
 npm install
 npm run dev
 ```
 
-The UI will be available at `http://localhost:5173`
-
-## Usage
-
-1. **Check Backend Status**: Look for the "Backend Connected" indicator in the top right
-2. **Select a Tool**: Click on any security tool from the left panel
-3. **Enter Target**: Provide a target URL or IP address
-4. **Start Scan**: Click "Start Scan" to begin the security assessment
-5. **View Results**: Monitor scan progress in the dashboard on the right
-
-## Docker Container Names
-
-The Docker containers are named with the pattern `scanner-api-[service]-1`:
-
-- `scanner-api-scanner-api-1` - Main API server
-- `scanner-api-nmap-1` - Nmap scanning
-- `scanner-api-nuclei-1` - Nuclei scanning
-- `scanner-api-owasp-zap-1` - OWASP ZAP proxy
-- `scanner-api-sslyze-1` - SSLyze SSL/TLS testing
-
-## API Endpoints
-
-- `POST /api/scan` - Start a new scan
-- `GET /api/scan/:scanId` - Get scan details
-- `GET /api/scans` - List all scans
-- `GET /health` - Check backend health
-
-## Troubleshooting
-
-### Backend Not Connected
-
-1. Check if Docker containers are running:
-   ```bash
-   docker-compose ps
-   ```
-
-2. Check backend logs:
-   ```bash
-   docker-compose logs scanner-api
-   ```
-
-3. Restart the backend:
-   ```bash
-   docker-compose restart scanner-api
-   ```
-
-### Scans Failing
-
-1. Verify the target is reachable
-2. Check individual tool logs:
-   ```bash
-   docker-compose logs nmap
-   docker-compose logs nuclei
-   ```
-
-3. Ensure proper network connectivity from containers
-
-### Port Conflicts
-
-If ports 3001 or 8080 are already in use, modify `docker-compose.yml`:
-
-```yaml
-ports:
-  - "3002:3001"  # Change external port
-```
-
-## Security Notes
-
-- These tools should only be used on systems you own or have permission to test
-- Never scan targets without proper authorization
-- Some scans may be detected by intrusion detection systems
-- Use responsibly and ethically
-
-## Stopping the Services
-
-To stop all containers:
-
+**Backend development**:
 ```bash
-docker-compose down
+cd backend
+pip install -r requirements.txt
+python main.py
 ```
 
-To stop and remove all data:
+## Environment Variables
 
-```bash
-docker-compose down -v
-```
+Required in `.env`:
+- `VITE_SUPABASE_URL` - Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Your Supabase anonymous key

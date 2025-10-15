@@ -1,49 +1,31 @@
 version: '3.8'
 
 services:
-  scanner-api:
+  backend:
     build: ./backend
     ports:
-      - "3001:3001"
+      - "8000:8000"
     environment:
-      - NODE_ENV=development
-      - PORT=3001
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./scan-results:/app/results
+      - ./backend:/app
+      - /tmp:/tmp
     networks:
       - scanner-network
+    restart: unless-stopped
 
-  nmap:
-    image: instrumentisto/nmap:latest
-    command: tail -f /dev/null
-    networks:
-      - scanner-network
-
-  nuclei:
-    image: projectdiscovery/nuclei:latest
-    command: tail -f /dev/null
-    volumes:
-      - ./scan-results:/results
-    networks:
-      - scanner-network
-
-  owasp-zap:
-    image: ghcr.io/zaproxy/zaproxy:stable
-    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.key=scanner-api-key
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "3000:80"
+    depends_on:
+      - backend
     networks:
       - scanner-network
-
-  sslyze:
-    image: python:3.11-slim
-    command: tail -f /dev/null
-    volumes:
-      - ./scan-results:/results
-    entrypoint: /bin/bash -c "pip install sslyze && tail -f /dev/null"
-    networks:
-      - scanner-network
+    restart: unless-stopped
 
 networks:
   scanner-network:
