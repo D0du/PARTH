@@ -1,12 +1,14 @@
 # Vulnerability Scanner Dashboard
 
-A comprehensive security scanning application with support for Nmap, Nikto, and Nuclei vulnerability scanners.
+A comprehensive security scanning application with support for Nmap, Nikto, Nuclei, SSLyze, and OWASP ZAP (baseline and API) scanners.
 
 ## Features
 
-- **Nmap Scanner**: Network mapping and port scanning
-- **Nikto Scanner**: Web server vulnerability scanning
-- **Nuclei Scanner**: Fast vulnerability scanner with templates
+- **Nmap**: Network mapping and port scanning
+- **Nikto**: Web server vulnerability scanning
+- **Nuclei**: Fast vulnerability scanner with templates
+- **SSLyze**: TLS/SSL configuration analysis (runs via Docker image)
+- **OWASP ZAP**: Baseline (passive) and API scans (runs via Docker image)
 - **Scan History**: View and manage all previous scans with results stored in Supabase
 - **Real-time Results**: View scan output in real-time
 - **Docker Support**: Easy deployment with Docker Compose
@@ -40,13 +42,16 @@ A comprehensive security scanning application with support for Nmap, Nikto, and 
 - **Frontend**: React + TypeScript + Tailwind CSS
 - **Backend**: FastAPI (Python)
 - **Database**: Supabase (PostgreSQL)
-- **Security Tools**: Nmap, Nikto, Nuclei (installed in backend container)
+- **Security Tools**: Nmap, Nikto, Nuclei (local), SSLyze & ZAP via Docker
 
 ## API Endpoints
 
 - `POST /scan/nmap` - Run Nmap scan
 - `POST /scan/nikto` - Run Nikto scan
 - `POST /scan/nuclei` - Run Nuclei scan
+- `POST /scan/sslyze` - Run SSLyze via Docker
+- `POST /scan/zap-baseline` - Run ZAP baseline via Docker
+- `POST /scan/zap-api` - Run ZAP API scan via Docker
 - `GET /scans` - Get all scan history
 - `GET /scans/{scan_id}` - Get specific scan details
 - `GET /health` - Health check
@@ -63,6 +68,9 @@ A comprehensive security scanning application with support for Nmap, Nikto, and 
 ## Security Note
 
 This tool is designed for authorized security testing only. Always ensure you have permission to scan target systems.
+
+### OpenVAS
+OpenVAS/GVM is not executed directly by this API due to its heavy persistent setup (database and feeds). You can run an external container like `immauss/openvas` and use its web UI, or extend the backend to orchestrate it.
 
 ## Development
 

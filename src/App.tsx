@@ -14,7 +14,7 @@ function App() {
                 Vulnerability Scanner Dashboard
               </h1>
               <p className="text-gray-600 mt-1">
-                Comprehensive security scanning with Nmap, Nikto, and Nuclei
+                Nmap, Nuclei, Nikto, SSLyze, and OWASP ZAP
               </p>
             </div>
           </div>
@@ -40,6 +40,31 @@ function App() {
             icon={<Zap size={24} />}
             title="Nuclei Scanner"
             description="Fast vulnerability scanner with templates"
+          />
+          <Scanner
+            tool="sslyze"
+            icon={<Shield size={24} />}
+            title="SSLyze (TLS/SSL)"
+            description="Analyze TLS/SSL configuration"
+          />
+          <Scanner
+            tool="zap-baseline"
+            icon={<Zap size={24} />}
+            title="OWASP ZAP Baseline"
+            description="Passive baseline scan for web apps"
+          />
+          <Scanner
+            tool="zap-api"
+            icon={<Zap size={24} />}
+            title="OWASP ZAP API Scan"
+            description="Scan OpenAPI/Swagger endpoints"
+          />
+          <Scanner
+            tool="openvas-start"
+            icon={<Shield size={24} />}
+            title="OpenVAS (Start Service)"
+            description="Launch OpenVAS container; open UI on :9392"
+            requireTarget={false}
           />
         </div>
 

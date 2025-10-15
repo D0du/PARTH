@@ -13,16 +13,17 @@ interface ScannerProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  requireTarget?: boolean;
 }
 
-export default function Scanner({ tool, icon, title, description }: ScannerProps) {
+export default function Scanner({ tool, icon, title, description, requireTarget = true }: ScannerProps) {
   const [target, setTarget] = useState('');
   const [options, setOptions] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
 
   const handleScan = async () => {
-    if (!target) {
+    if (requireTarget && !target) {
       alert('Please enter a target');
       return;
     }
@@ -36,7 +37,7 @@ export default function Scanner({ tool, icon, title, description }: ScannerProps
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ target, tool, options }),
+        body: JSON.stringify({ target: target || 'localhost', tool, options }),
       });
 
       const data = await response.json();
@@ -64,19 +65,21 @@ export default function Scanner({ tool, icon, title, description }: ScannerProps
       </div>
 
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Target (IP/Domain)
-          </label>
-          <input
-            type="text"
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-            placeholder="example.com or 192.168.1.1"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            disabled={loading}
-          />
-        </div>
+        {requireTarget && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Target (IP/Domain)
+            </label>
+            <input
+              type="text"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              placeholder="example.com or 192.168.1.1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              disabled={loading}
+            />
+          </div>
+        )}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
